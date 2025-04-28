@@ -1,0 +1,91 @@
+{
+  "meta": {
+    "generatedAt": "2025-04-22T07:04:39.020Z",
+    "tasksAnalyzed": 10,
+    "thresholdScore": 5,
+    "projectName": "Your Project Name",
+    "usedResearch": false
+  },
+  "complexityAnalysis": [
+    {
+      "taskId": 1,
+      "taskTitle": "Setup Project Repository and Database Schema",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the Supabase database schema implementation into logical subtasks, focusing on table groups, security policies, and environment setup",
+      "reasoning": "This task involves setting up the entire database infrastructure with multiple related tables, security policies, and integration with Next.js. The complexity comes from the number of tables and their relationships, plus the need to configure proper security."
+    },
+    {
+      "taskId": 2,
+      "taskTitle": "Implement User Authentication and Profile Management",
+      "complexityScore": 6,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Divide the authentication system implementation into logical components covering registration, login, profile management, and auth state management",
+      "reasoning": "Authentication involves several interconnected components but follows standard patterns. The profile management adds some complexity, but Supabase Auth simplifies much of the implementation. The task requires careful state management and security considerations."
+    },
+    {
+      "taskId": 3,
+      "taskTitle": "Develop Game Session Creation and Joining",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the game session management into subtasks covering creation, joining, real-time synchronization, and host controls",
+      "reasoning": "This task involves real-time functionality with Supabase Realtime, which adds complexity. Creating the game room system with host privileges and persistence requires careful state management and API design. The chat functionality adds another layer of complexity."
+    },
+    {
+      "taskId": 4,
+      "taskTitle": "Implement Core Game Mechanics and Tracks",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Divide the core game mechanics implementation into logical groups focusing on different tracks, their interactions, and the Philosophy token system",
+      "reasoning": "This task forms the foundation of the game logic with multiple interconnected tracks and complex rules. Each track has unique behaviors and constraints. The real-time synchronization of these mechanics adds significant complexity, requiring careful state management and validation."
+    },
+    {
+      "taskId": 5,
+      "taskTitle": "Develop City Assignment and Development System",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the city system implementation into subtasks covering assignment, city-specific abilities, development management, and UI components",
+      "reasoning": "The city system involves unique starting conditions and a complex development tree with requirements. The modular architecture for city-specific abilities adds complexity, as does the need to validate development unlocking against various game conditions."
+    },
+    {
+      "taskId": 6,
+      "taskTitle": "Implement Politics Cards System and Drafting",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Divide the Politics cards system into subtasks covering card data structures, drafting mechanics, play validation, effect handlers, and UI components",
+      "reasoning": "The Politics cards system is highly complex with drafting, hand management, and various effect types. Creating a modular architecture for card effects requires careful design. The real-time nature of drafting and the need to handle various card effects adds significant complexity."
+    },
+    {
+      "taskId": 7,
+      "taskTitle": "Develop Knowledge Tokens and Military Actions",
+      "complexityScore": 6,
+      "recommendedSubtasks": 4,
+      "expansionPrompt": "Break down the Knowledge token system into subtasks covering token data structures, acquisition mechanics, UI components, and integration with other game systems",
+      "reasoning": "This task involves implementing a subsystem that interacts with other game mechanics. The complexity comes from the validation rules and the special case handling for Persepolis. The integration with Politics cards and developments adds some interdependency challenges."
+    },
+    {
+      "taskId": 8,
+      "taskTitle": "Implement Game Phases and Round Management",
+      "complexityScore": 9,
+      "recommendedSubtasks": 7,
+      "expansionPrompt": "Divide the game flow implementation into subtasks covering round management, event cards, and each distinct game phase with its specific mechanics",
+      "reasoning": "This task is highly complex as it orchestrates the entire game flow across multiple phases with different mechanics. It depends on several other systems being in place and requires careful state management to ensure the game progresses correctly through all phases and rounds."
+    },
+    {
+      "taskId": 9,
+      "taskTitle": "Develop Scoring System and Game Completion",
+      "complexityScore": 7,
+      "recommendedSubtasks": 5,
+      "expansionPrompt": "Break down the scoring system into subtasks covering different scoring sources, end-game triggers, victory determination, and game history recording",
+      "reasoning": "The scoring system involves calculations from multiple sources with complex rules like Glory track multiplication. The need to update user statistics and record game history adds persistence challenges. The UI for game summary needs to present complex information clearly."
+    },
+    {
+      "taskId": 10,
+      "taskTitle": "Finalize UI/UX, Testing, and Deployment",
+      "complexityScore": 8,
+      "recommendedSubtasks": 6,
+      "expansionPrompt": "Divide the finalization process into subtasks covering UI polishing, testing strategies for different components, performance optimization, and deployment setup",
+      "reasoning": "This task encompasses multiple disciplines including UI design, testing, performance optimization, and DevOps. The comprehensive testing suite across different levels adds significant complexity. Setting up proper error tracking, analytics, and CI/CD requires careful configuration."
+    }
+  ]
+}

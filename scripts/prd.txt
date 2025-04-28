@@ -1,0 +1,668 @@
+<context>
+
+
+# Product Requirements Document (PRD)
+
+## Full Digital Application for the Khôra Board Game
+
+### Objective
+Design a comprehensive and interactive web application for the Khôra board game, enabling users to fully play and manage games online. The application must provide personalized views, a fluid user experience, and automated management of all game components and player interactions.
+
+### Target Audience
+- Players and enthusiasts of the Khôra board game
+- Groups of friends wishing to play remotely or digitally
+</context>
+
+<PRD>
+---
+
+## Features
+
+### 1. User Account Management
+
+- **Sign-Up and Authentication**
+  - Create accounts using email and password.
+  - Authentication handled via Supabase.
+- **User Profiles**
+  - Display username, optional avatar, game history, victories, average point from all the parties, and total points.
+
+### 2. Complete Game Session Management
+
+- **Creating a Digital Game Room**
+  - Users can start fully digital games.
+  - Automatically generate a unique sharable URL.
+  - The host manages the session (start, pause, end, player management).
+
+- **Joining a Digital Game Room**
+  - Access via the shared URL.
+  - Real-time synchronization of the game state across all players.
+
+- **Player-Specific Interfaces**
+  - Private and secure view of cards in hand.
+  - Real-time updates and notifications tailored to each player.
+  - Interactive spaces for each phase of the game.
+
+### 3. Global game mechanics
+- **Citizen Track**
+    - The citizen track is from 0  et 15, at the start, each player start with 3 citizen
+- **Taxe track**
+    - It's from 0 to 10, it represent the amount of drachmas that player receive each taxe phases
+    - With special politics cards or City special upgrade, player can exchange this against other ressources
+- **Glory track**
+    - This track is important for scoring phase, the player will multiply the number of Major knowledge token by the number of glory he have, the result is added to his victory points
+    - With special politics cards or City special upgrade, player can exchange this against other ressources
+- **Philosophy token**
+    - This token can be used in 3 differents way :
+        - During the dice phase, player can trade a Philosophy token against 3 citizens, no limit
+        - During action, pair of Philosophy token can be used to temporarily ignore one Knowledge token to play a Politics card or for the requirement of the Development phase.
+        - During the Progress phase, player can pay a Philosophy token to upgrade an extra level of the track of his choices, still need to pay the dragmas.
+- **Tracks**
+    - They start level 1 to level 7
+    - Each tracks has their own level cost and reawards, player has to pay dragmas to upgrade it during the developments phase
+    - Economy tracks : 
+        - Level 2 : Cost 2 dragmas, Reward : 3 citizen
+        - Level 3 : Cost 2 dragmas, Reward : 3 citizen
+        - Level 4 : Cost 3 dragmas, Reward : 5 victory points
+        - Level 5 : Cost 3 dragmas, No Reward
+        - Level 6 : Cost 4 dragmas, No Reward
+        - Level 7 : Cost 4 dragmas, Reward : 10 victory points
+    - Culture track :
+        - Level 2 : Cost 1 dragmas, Reward : No Reward
+        - Level 3 : Cost 4 dragmas, Reward : 1 up on the taxe track
+        - Level 4 : Cost 6 dragmas, Reward : 1 extra dice on the dice phase -> Once the player hit this level, he can always shoot 3 dice and so play 3 actions during the action phas
+        - Level 5 : Cost 6 dragmas, Reward : 1 up on the taxe track
+        - Level 6 : Cost 7 dragmas, Reward : 1 up on the taxe track
+        - Level 7 : Cost 7 dragmas, Reward : 2 up on the taxe track
+    - Military track : 
+        - Level 2 : Cost 2 dragmas, Reward : 1 up on the Glory track
+        - Level 3 : Cost 3 dragmas, Reward : No reaward
+        - Level 4 : Cost 4 dragmas, Reward : 1 up on the Glory track
+        - Level 5 : Cost 5 dragmas, Reward : No reaward
+        - Level 6 : Cost 7 dragmas, Reward : 1 up on the Glory track
+        - Level 7 : Cost 9 dragmas, Reward : 2 up on the Glory track
+- **Politics Cards** 
+    - Setup phase for the launching of the game, The Draft : 
+        - All player have 5 cards in their hands, hidden from the other, they have 15 second to choose one to keep it, then pass the 4 remaining cards to another player (ex : Player 1 give to player 2, player to give to player 3, player 3 give to player 1). They repeat the operation untill each player chose 5 cards.
+    - All the cards has their own effect, dragmas cost and knowledge token cost
+- **Cities**
+    - Each cities has their own setup caracteristiques
+    - 3 developpement phase with their own effect and cost
+
+### 4. Fully Digital Gameplay Experience
+An entire game is 9 round long where each round go by eache ABCDEFG phases described bellow.
+9 event are selected, the first 1 is always the Setup event, the last is always the Persepolis event. The other 7 are chose randomly 
+
+### SETUP PHASE 
+- Each player receive a City, random drawing
+- Do the drafting Phase
+- Automatic aplying setup for each city
+- Begining of the first round
+
+#### A. Event Announcement
+- Automatic digital reveal of event cards.
+- Clear and immediate communication of event impacts.
+
+#### B. Tax Phase
+- Automatic calculation and distribution of taxes based on each player's position on the Tax track.
+- Take in count if the player have politics cards that affect their taxes, they can win military point, victory points or else
+
+#### C. Dice Rolling and Actions
+- Automatic digital simulation of dice rolls.
+- The rolling dice is unique for each player, when the phase start, each player have their own result and combinaison of dices.
+- Each dice determine which action the player can take. 
+    - Ex : Score is 4 & 3, so the player can take action that cost 4 or less, and an acion that cost 3 or less, if he want to play action that cost more, he have to pay the difference in Citizen.
+- Automatic adjustment of the Citizens track based on dice and selected actions.
+
+#### D. Detailed Action Management
+- Digital selection of actions according to dice results:
+  - **Philosophy** [COST : 0]: Gain Philosophy tokens for later strategic use.
+  - **Legislation** [COST 1]:
+    - Immediately gain 3 citizens.
+    - Draw the top 2 cards from the Politics deck.
+    - Choose 1 card to keep and place the other on the bottom of the deck.
+    - May temporarily exceed Citizen track level 15 and use excess for other actions during the round.
+    - At the end of the Action Phase, reduce back to 15 if still above.
+    - No limit to the number of Politics cards in hand.
+  - **Culture** [COST 2]: Earn victory points based on current Culture track level.
+  - **Trade** [COST 3]:
+    - Gain drachmas equal to your Economy track level + 1.
+    - Optionally buy one Minor Knowledge token of any color for 5 drachmas from the reserve.
+    - Unlimited number of Knowledge tokens may be held.
+  - **Military** [COST 4]:
+    - Choose an available Knowledge token from the central board.
+    - Your Military level must be equal to or greater than the token's required value.
+    - Reduce Military level by the value shown on the token.
+    - Take the token and place it in front of you, applying any benefits shown.
+    - One Explore action per Military action (except for Persepolis, which allows taking all 3 Major tokens at once).
+  - **Politics** [COST 5]: Play a Politics card from hand.
+    - **Requirement Check**:
+      - Ensure required Knowledge tokens are present (top right of card).
+      - Tokens may be Major or Minor and reused for multiple cards.
+    - **Cost Payment**:
+      - Pay drachmas cost shown (top left of card). If insufficient, you cannot play it.
+    - **Card Placement and Effect**:
+      - Place card face-up.
+      - Types:
+        - Yellow: Immediate effect.
+        - Purple: Ongoing effect until game end (unless removed).
+        - Red: Scoring effect only during final scoring.
+  - **Development** [COST 6]: Unlock city-specific improvements by meeting requirements.
+
+- **Digital Politics Card Management**
+  - Real-time card drawing.
+  - Private hand management interface.
+  - Automated validation of play requirements (tokens, drachmas).
+- **Military Knowledge token Management**
+    - Display all the available knowledge token
+    - Display the cost & reward for each
+    - Visual differenciation for minor & major token
+    - Display Persepolis
+
+#### E. Progress Phase
+- Digital selection and automated handling of track advancement (Economy, Culture, Military).
+- Instant application of costs and benefits.
+
+#### F. Event Resolution
+- Immediate application of revealed event effects.
+- Clear and personalized impact notifications.
+
+#### G. Achievement Tracking
+- Automatic monitoring of achievement conditions.
+- Real-time notifications for completed achievements.
+- If player achieve something alone he can choose to up the Taxes track or the Glory track
+
+
+### 5. Score and Victory Tracking
+- Automatic and precise tracking of scores and outcomes.
+- Persistent storage of game history.
+
+### 6. Notifications and Alerts
+- Personalized notifications for phase changes, achievements, card draws, and end-of-game summaries.
+
+### 7. Technical Stack
+
+- **Frontend**:
+  - Framework: Next.js (React) for SSR/SSG and client-side rendering
+  - State Management: React Context, Zustand or Redux for game state, player state, and real-time updates
+  - Component Library: Custom components with Tailwind CSS for rapid, themeable UI development
+  - Real-Time: Subscriptions to Supabase real-time channels or WebSockets for instant game state sync
+  - Routing: Next.js dynamic routing for game rooms, player dashboards, and admin views
+  - Form Handling: React Hook Form or Formik for authentication and in-game forms
+  - Notifications: Toast libraries (e.g., react-hot-toast) for in-game alerts and effect triggers
+  - Accessibility: ARIA roles and keyboard navigation for inclusive design
+
+- **Backend**:
+  - Platform: Supabase (PostgreSQL, Auth, Storage, Realtime)
+  - API: Next.js API routes or serverless functions for custom endpoints (e.g., play card, unlock development)
+  - Game Engine: Modular backend logic for phase transitions, effect resolution, and rule enforcement
+  - Security: Row-level security (RLS) in Supabase, JWT-based auth, and server-side validation for all actions
+  - Effect Handlers: Modular, testable backend functions for politics cards, city developments, and achievements
+
+- **Database**:
+  - Relational: PostgreSQL (via Supabase) with normalized schema for users, games, participants, player state, cities, developments, politics cards, tokens, events, achievements, logs, and chat
+  - Migrations: Supabase CLI or Prisma for schema migrations and version control
+  - Indexing: Foreign keys and indexes for performance and data integrity
+
+- **Real-Time & Sync**:
+  - Supabase Realtime for database change subscriptions (game state, chat, notifications)
+  - WebSockets (if needed) for custom real-time flows (e.g., draft timer, instant effect triggers)
+  - Optimistic UI updates on the frontend for seamless user experience
+
+- **Testing**:
+  - Unit Testing: Jest or Vitest for backend logic, effect handlers, and utility functions
+  - Integration Testing: React Testing Library for UI flows and API integration
+  - End-to-End (E2E): Cypress or Playwright for full game session and edge case testing
+
+- **Deployment & DevOps**:
+  - Hosting: Vercel for frontend and serverless API deployment
+  - Supabase cloud for managed database, auth, and real-time
+  - CI/CD: GitHub Actions or Vercel built-in pipelines for automated testing and deployment
+  - Monitoring: Sentry or LogRocket for error tracking and user session replay
+
+- **Extensibility & Modularity**:
+  - All effect logic (politics cards, city developments, achievements) implemented as modular, testable backend functions
+  - Data-driven architecture for easy addition of new cards, cities, developments, and expansions
+  - API-first design for future mobile or third-party integrations
+
+- **Other Tools**:
+  - Linting/Formatting: ESLint, Prettier
+  - Documentation: Storybook for UI components, Swagger/OpenAPI for API docs
+  - Analytics: PostHog or Plausible for usage tracking and feature analytics
+
+### 8. Complete Data Schema
+
+- **Users**
+  - id (UUID, PK)
+  - username (string)
+  - email (string)
+  - avatar_url (string)
+  - created_at (timestamp)
+  - total_points (int)
+  - victories (int)
+  - games_played (int)
+  - average_points (float)
+
+- **Games**
+  - id (UUID, PK)
+  - host_id (UUID, FK to Users)
+  - game_url (string, unique)
+  - current_phase (string)
+  - current_round (int)
+  - created_at (timestamp)
+  - ended_at (timestamp)
+  - event_deck (jsonb) // Ordered list of event card ids for this game
+  - setup_complete (boolean)
+
+- **Game Participants**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - user_id (UUID, FK to Users)
+  - city_id (UUID, FK to Cities)
+  - seat_number (int)
+  - is_host (boolean)
+  - points_scored (int)
+  - victory (boolean)
+  - left_game (boolean)
+
+- **Player State (per game)**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - user_id (UUID, FK to Users)
+  - citizen_count (int)
+  - tax_level (int)
+  - glory_level (int)
+  - philosophy_tokens (int)
+  - economy_level (int)
+  - culture_level (int)
+  - military_level (int)
+  - drachmas (int)
+  - knowledge_tokens (jsonb) // List of token ids held
+  - achievements (jsonb) // List of achievement ids completed
+  - dice_results (jsonb) // Results for current round
+  - actions_taken (jsonb) // Actions chosen for current round
+  - private_notes (text)
+
+- **Cities**
+  - id (UUID, PK)
+  - name (string)
+  - description (text)
+  - starting_citizens (int)
+  - starting_drachmas (int)
+  - starting_tracks (jsonb) // { economy, culture, military, tax, glory }
+  - special_ability (text)
+  - development_1 (UUID, FK to CityDevelopments)
+  - development_2 (UUID, FK to CityDevelopments)
+  - development_3 (UUID, FK to CityDevelopments)
+
+- **City Developments**
+  - id (UUID, PK)
+  - city_id (UUID, FK to Cities)
+  - name (string)
+  - description (text)
+  - requirements (jsonb) // e.g. { economy: 4, knowledge: ["blue"] }
+  - cost (int)
+  - benefit (text)
+
+- **Politics Cards**
+  - id (UUID, PK)
+  - name (string)
+  - description (text)
+  - effect_type (enum: immediate, ongoing, scoring)
+  - drachmas_cost (int)
+  - knowledge_requirements (jsonb) // e.g. ["blue", "red"]
+  - effect (text)
+  - image_url (string)
+
+- **Player Politics Cards**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - user_id (UUID, FK to Users)
+  - card_id (UUID, FK to PoliticsCards)
+  - in_hand (boolean)
+  - in_play (boolean)
+  - discarded (boolean)
+  - drawn_at (timestamp)
+  - played_at (timestamp)
+
+- **Knowledge Tokens**
+  - id (UUID, PK)
+  - type (enum: minor, major)
+  - color (enum: blue, red, yellow, green, purple, etc.)
+  - value (int) // For military cost
+  - gold reward (int)
+  - victory point reward (int)
+  - is_persepolis (boolean)
+
+- **Player Knowledge Tokens**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - user_id (UUID, FK to Users)
+  - token_id (UUID, FK to KnowledgeTokens)
+  - acquired_at (timestamp)
+
+- **Event Cards**
+  - id (UUID, PK)
+  - name (string)
+  - description (text)
+  - effect (text)
+  - is_setup (boolean)
+  - is_persepolis (boolean)
+
+- **Game Events (per game)**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - event_card_id (UUID, FK to EventCards)
+  - round_number (int)
+  - revealed_at (timestamp)
+  - resolved (boolean)
+
+- **Achievements**
+  - id (UUID, PK)
+  - name (string)
+  - description (text)
+  - condition (text)
+  - reward (text)
+
+- **Player Achievements**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - user_id (UUID, FK to Users)
+  - achievement_id (UUID, FK to Achievements)
+  - achieved_at (timestamp)
+
+// Additional tables for extensibility
+- **Game Log**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - user_id (UUID, FK to Users, nullable)
+  - action_type (string)
+  - details (jsonb)
+  - created_at (timestamp)
+
+- **Chat Messages**
+  - id (UUID, PK)
+  - game_id (UUID, FK to Games)
+  - user_id (UUID, FK to Users)
+  - message (text)
+  - created_at (timestamp)
+
+// Indexes and foreign keys should be set for all FK fields for performance and integrity.
+
+### 9. UI/UX Considerations
+- Responsive and intuitive design for desktop and mobile.
+- Thematic visual identity inspired by Ancient Greece.
+- Clear separation between private elements (cards, choices) and public data.
+
+### 10. Politics Cards Integration
+
+#### Technical Implementation Plan
+
+    ##### 1. Database Schema
+    - **PoliticsCards**: Stores all card definitions (see Data Schema section).
+    - **PlayerPoliticsCards**: Tracks which cards are in each player's hand, in play, or discarded for each game.
+    - **GameLog**: Records all card draws, plays, and effect triggers for audit and replay.
+
+    ##### 2. Backend Logic
+    - **Drafting Logic**:
+    - On game setup, backend randomly assigns 5 Politics cards to each player.
+    - Implements timed draft: after each pick, updates PlayerPoliticsCards and passes remaining cards to the next player.
+    - Enforces timer and auto-pick if time expires.
+    - **Hand Management**:
+    - All hand state is stored server-side in PlayerPoliticsCards.
+    - API endpoints to fetch a player's hand (authenticated, only for that player).
+    - **Play Validation**:
+    - Endpoint to play a card checks:
+        - Player owns the card and it is in hand.
+        - Player has required knowledge tokens (query PlayerKnowledgeTokens).
+        - Player has enough drachmas (check PlayerState).
+        - Any city or unique restrictions.
+    - If valid, moves card to in_play, deducts drachmas, and triggers effect.
+    - **Effect Resolution**:
+    - Effects are implemented as backend functions (e.g., applyImmediateEffect, applyOngoingEffect, queueScoringEffect).
+    - Effects can update player state, global game state, or trigger further actions (e.g., draw cards, gain resources).
+    - Ongoing effects are stored and checked at relevant phase transitions.
+    - Scoring effects are processed at game end.
+    - **Edge Cases**:
+    - Backend enforces all caps (e.g., citizen max), resets temporary overflows at phase end.
+    - Handles city-specific logic and card interactions.
+
+    ##### 3. API Endpoints
+    - `GET /api/game/:gameId/politics/hand` — Returns authenticated player's hand.
+    - `POST /api/game/:gameId/politics/draft` — Submit draft pick.
+    - `POST /api/game/:gameId/politics/play` — Play a card (validates and applies effect).
+    - `GET /api/game/:gameId/politics/in-play` — Returns all played cards for all players (public info).
+    - `GET /api/game/:gameId/politics/effects` — Returns all ongoing effects for the game.
+
+    ##### 4. Real-Time Synchronization
+    - Use Supabase real-time or WebSockets to:
+    - Notify players of new cards drawn, cards played, and effect triggers.
+    - Sync in-play cards and ongoing effects to all clients.
+    - Update UI instantly on phase transitions or effect resolutions.
+
+    ##### 5. Frontend Architecture
+    - **State Management**:
+    - Use React context or a state manager (e.g., Zustand, Redux) to track:
+        - Player's hand (private, from API)
+        - In-play cards (public, from API)
+        - Ongoing effects (public, from API)
+        - Draft state (during setup)
+    - **UI Components**:
+    - Hand view: Shows only the player's cards, with play buttons and requirement indicators.
+    - Draft modal: Timed selection UI, disables after pick or timeout.
+    - In-play area: Shows all played cards for all players, with effect icons and tooltips.
+    - Effect notifications: Toasts or banners for new effects, triggers, or errors.
+    - **Play Flow**:
+    - On play attempt, frontend calls play API, disables button while pending.
+    - On success, updates hand and in-play state; on error, shows message.
+    - Ongoing effects update UI contextually (e.g., bonus icons, modified actions).
+
+    ##### 6. Integration with Game Engine
+    - All card actions and effects are processed through the backend game engine, which:
+    - Validates phase and action legality.
+    - Applies all state changes atomically (transactional updates).
+    - Logs all actions for replay/debugging.
+    - Effects that interact with other modules (e.g., tracks, tokens, city developments) call shared engine functions.
+
+    ##### 7. Security & Privacy
+    - All hand and draft data is only accessible to the owning player (auth required).
+    - In-play and effect data is public to all players.
+    - All validation is enforced server-side; client cannot spoof plays or effects.
+
+    ##### 8. Extensibility
+    - Card effects are modular backend functions, allowing new cards to be added by defining new effect handlers.
+    - All card data is stored in the database, enabling easy expansion or balance changes.
+
+### 11. Cities Integration
+
+#### Technical Implementation Plan
+
+##### 1. Database Schema
+- **Cities**: Stores all city definitions (see Data Schema section).
+- **CityDevelopments**: Stores all possible city-specific developments and their requirements/effects.
+- **GameParticipants**: Links each player to their assigned city for a game.
+- **PlayerState**: Tracks each player's current city development progress, unlocked developments, and city-specific state for the game.
+- **GameLog**: Records all city assignments, development unlocks, and city-triggered effects for audit and replay.
+
+##### 2. Backend Logic
+- **City Assignment**:
+  - On game setup, backend randomly assigns a city to each player (or allows selection if enabled).
+  - Applies city-specific starting state (citizens, drachmas, tracks, etc.) to PlayerState.
+- **Development Unlocking**:
+  - Backend checks requirements (track levels, knowledge tokens, etc.) when a player attempts to unlock a development.
+  - If valid, marks development as unlocked in PlayerState, applies cost, and triggers benefit/effect.
+  - Handles city-specific rules and interactions (e.g., unique abilities, development chains).
+- **Effect Resolution**:
+  - City and development effects are implemented as backend functions (e.g., applyCityEffect, applyDevelopmentEffect).
+  - Effects can update player state, global game state, or trigger further actions (e.g., gain resources, modify tracks).
+  - Ongoing city effects are checked at relevant phase transitions.
+- **Edge Cases**:
+  - Backend enforces all caps and resets temporary overflows at phase end.
+  - Handles interactions between city effects, developments, and other modules (e.g., politics cards).
+
+##### 3. API Endpoints
+- `GET /api/game/:gameId/cities` — Returns all city definitions and developments (public info).
+- `GET /api/game/:gameId/player/:playerId/city` — Returns the player's assigned city and current development state (private info).
+- `POST /api/game/:gameId/player/:playerId/development/unlock` — Attempt to unlock a city development (validates and applies effect).
+- `GET /api/game/:gameId/cities/in-play` — Returns all cities and unlocked developments for all players (public info).
+
+##### 4. Real-Time Synchronization
+- Use Supabase real-time or WebSockets to:
+  - Notify players of city assignments, development unlocks, and triggered effects.
+  - Sync city and development state to all clients.
+  - Update UI instantly on phase transitions or effect resolutions.
+
+##### 5. Frontend Architecture
+- **State Management**:
+  - Use React context or a state manager to track:
+    - Player's city and development state (private, from API)
+    - All cities and unlocked developments (public, from API)
+- **UI Components**:
+  - City dashboard: Shows assigned city, starting stats, and special abilities.
+  - Developments panel: Shows available, locked, and unlocked developments with requirements and effects.
+  - Unlock modal: Allows player to attempt unlocking a development, shows requirements and confirms on success.
+  - Effect notifications: Toasts or banners for new developments, triggered effects, or errors.
+- **Play Flow**:
+  - On unlock attempt, frontend calls unlock API, disables button while pending.
+  - On success, updates development state; on error, shows message.
+  - Ongoing city effects update UI contextually (e.g., bonus icons, modified actions).
+
+##### 6. Integration with Game Engine
+- All city assignments, development unlocks, and effects are processed through the backend game engine, which:
+  - Validates phase and action legality.
+  - Applies all state changes atomically (transactional updates).
+  - Logs all actions for replay/debugging.
+- Effects that interact with other modules (e.g., tracks, tokens, politics cards) call shared engine functions.
+
+##### 7. Security & Privacy
+- Player's city and development state is only accessible to the owning player (auth required).
+- All city assignments and unlocked developments are public to all players.
+- All validation is enforced server-side; client cannot spoof unlocks or effects.
+
+##### 8. Extensibility
+- City and development effects are modular backend functions, allowing new cities or developments to be added by defining new effect handlers.
+- All city and development data is stored in the database, enabling easy expansion or balance changes.
+
+---
+
+## Milestones & Deliverables
+
+### Milestone 1: Project Setup & User Management
+- Environment configuration (Supabase, Next.js, Tailwind CSS)
+- User account creation, authentication, and profile management
+- User stats tracking (total points, victories, games played, average points)
+- Setting up database in Supabase with the SQL editor tool.
+
+### Milestone 2: Core Game Session & Real-Time Engine
+- Game room creation, joining, and host controls
+- Real-time synchronization of game state (Supabase real-time/WebSockets)
+- Player-specific interfaces and secure private/public data separation
+- Game log and chat system implementation
+
+### Milestone 3: Global Game Mechanics & Data Models
+- Implementation of all global tracks (Citizen, Tax, Glory, Philosophy, Economy, Culture, Military)
+- Knowledge tokens, event cards, and achievements system
+- Drafting phase logic and UI
+- Complete data schema for all entities (users, games, participants, player state, cities, developments, politics cards, tokens, events, achievements)
+
+### Milestone 4: Fully Digital Gameplay Phases
+- Implementation of all game phases (A-G) for each round:
+  - Event announcement
+  - Tax phase
+  - Dice rolling and action selection
+  - Action management (Philosophy, Legislation, Culture, Trade, Military, Politics, Development)
+  - Progress phase
+  - Event resolution
+  - Achievement tracking
+- Enforcement of all rules, requirements, and edge cases
+
+### Milestone 5: Politics Cards System
+- Technical implementation of politics cards (database, backend logic, API, real-time sync)
+- Drafting, hand management, play validation, and effect resolution
+- UI/UX for private hand, in-play cards, and effect notifications
+- Integration with all relevant game phases and player actions
+- Extensible effect handler system for future expansions
+- Action and features to implement the actual 70 cards already existing
+
+### Milestone 6: Cities & Developments System
+- Technical implementation of cities and city developments (database, backend logic, API, real-time sync)
+- City assignment, development unlocking, and effect resolution
+- UI/UX for city dashboard, developments panel, and unlock flow
+- Integration with player state, game engine, and other modules
+- Extensible effect handler system for new cities/developments
+
+
+### Milestone7: Testing, QA & Deployment
+- Comprehensive unit, integration, and end-to-end testing for all modules
+- Real-time and edge case scenario testing
+- Performance optimization and security review
+- Deployment to production (e.g., Vercel)
+- Post-launch monitoring and bugfixes
+
+### Milestone 8: Extensibility & Future Enhancements
+- Modular architecture for easy addition of new politics cards, cities, developments, and expansions
+- Support for advanced analytics, AI-based suggestions, and new content
+- Voice/text chat integration and community features
+
+---
+
+## Constraints & Assumptions
+- The application is fully digital, replacing all physical components of the Khôra board game.
+- Each player has a secure and personalized view of private game elements (hand, choices, city developments, etc.).
+- All game state, player actions, and effects are managed and validated server-side; the client cannot spoof or bypass rules.
+- Real-time synchronization is required for all game state changes, notifications, and chat, using Supabase Realtime or WebSockets.
+- The system assumes reliable internet connectivity for all players during a session; temporary disconnects are handled gracefully, but persistent loss may impact gameplay.
+- User authentication and authorization are enforced via Supabase Auth and JWTs; only authenticated users can join or create games.
+- All sensitive data (private hands, draft picks, player state) is only accessible to the owning player; public data (in-play cards, unlocked developments) is visible to all participants.
+- The database schema is normalized and relational, with strict foreign key constraints and indexing for integrity and performance.
+- The architecture is modular and extensible, supporting the addition of new politics cards, cities, developments, and future expansions without major refactoring.
+- The UI is responsive and accessible, supporting both desktop and mobile browsers, with ARIA roles and keyboard navigation.
+- All effect logic (politics cards, city developments, achievements) is implemented as modular, testable backend functions.
+- Game logic enforces all rules, requirements, and edge cases as described in the PRD, including phase transitions, caps, and special interactions.
+- Third-party services (Supabase, Vercel, analytics, error tracking) are assumed to be available and reliable; fallback or migration plans may be needed for long-term support.
+- Testing (unit, integration, E2E) is required for all critical modules before production deployment.
+- Security best practices are followed throughout (RLS, input validation, XSS/CSRF protection, secure storage of secrets).
+- Analytics and monitoring are implemented for usage tracking, error reporting, and performance optimization.
+- The system is designed for API-first extensibility, enabling future mobile apps or third-party integrations.
+
+---
+
+## Future Enhancements
+- Expansion and new content support
+
+## Glossary of Game-Specific Terms
+
+This glossary defines all Khôra-specific terms, mechanics, and entities referenced in this PRD. It is intended to ensure clarity for both human developers and AI agents when parsing requirements and generating tasks.
+
+- **Action Phase**: The phase in each round where players use their dice to select and perform actions (Philosophy, Legislation, Culture, Trade, Military, Politics, Development).
+- **Achievement**: A special in-game accomplishment that, when completed, grants a reward (e.g., track advancement). Tracked per player and per game.
+- **City**: A unique player identity with specific starting resources, abilities, and three unlockable developments. Each player is assigned a city at game start.
+- **City Development**: A city-specific upgrade that can be unlocked by meeting requirements (e.g., track levels, knowledge tokens). Grants unique benefits or effects.
+- **Citizen Track**: A player-specific track (0–15) representing the number of citizens available for actions and requirements.
+- **Drachmas**: The in-game currency used to pay for actions, developments, and card costs.
+- **Drafting Phase**: The initial setup phase where players select Politics cards for their starting hand by picking and passing cards in a timed sequence.
+- **Event Card**: A card drawn at the start of each round (except setup) that introduces a global effect for that round. Includes special setup and Persepolis events.
+- **Game Log**: A record of all significant actions, card plays, and effect triggers for audit, replay, and debugging.
+- **Game Participant**: A user who has joined a specific game session, with a unique player state and assigned city.
+- **Glory Track**: A player-specific track used for end-game scoring and certain card effects. Higher glory increases the value of major knowledge tokens.
+- **Hand (Politics Cards)**: The set of Politics cards currently held by a player. Only visible to the owning player.
+- **In-Play Card**: A Politics card that has been played and is now active (immediate, ongoing, or scoring effect).
+- **Knowledge Token**: A resource token (minor or major, colored) required to play certain Politics cards or unlock developments. Acquired via Military actions or Trade.
+- **Legislation Action**: An action allowing a player to gain citizens and draw Politics cards, with special rules for exceeding the citizen cap.
+- **Military Track**: A player-specific track representing military strength, used to acquire knowledge tokens and for certain card effects.
+- **Ongoing Effect**: A Politics card or city development effect that remains active until the end of the game or until removed.
+- **Persepolis Event**: The final event card in every game, with unique rules and effects.
+- **Philosophy Token**: A special token used for trading citizens, bypassing knowledge requirements, or gaining extra track advancements.
+- **Player State**: The complete set of a player's current resources, tracks, tokens, cards, and achievements for a given game.
+- **Politics Card**: A card with immediate, ongoing, or scoring effects. Requires drachmas and knowledge tokens to play. Managed via drafting, hand, and in-play states.
+- **Progress Phase**: The phase where players can advance their tracks (Economy, Culture, Military, Citizens) by paying drachmas and meeting requirements.
+- **Real-Time Sync**: The system for instantly updating all players' game state, actions, and notifications using Supabase Realtime or WebSockets.
+- **Scoring Effect**: A Politics card or development effect that is only evaluated during end-game scoring.
+- **Setup Phase**: The initial phase of the game where cities are assigned, the draft occurs, and starting resources are distributed.
+- **Tax Track**: A player-specific track (0–10) determining the amount of drachmas received during the Tax phase.
+- **Token (General)**: Any game piece representing a resource or requirement (e.g., knowledge, philosophy).
+- **Track**: Any player-specific progress bar (Economy, Culture, Military, Citizens, Tax, Glory) that can be advanced for rewards or requirements.
+- **Victory Points**: The primary scoring metric, accumulated through actions, cards, developments, and end-game bonuses.
+
+If a term is not listed here, refer to the relevant section in the PRD for context or add a new entry as the project evolves. 
+
+</PRD>
