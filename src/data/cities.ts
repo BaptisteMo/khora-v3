@@ -3,9 +3,20 @@
 
 export type KnowledgeTokenColor = 'red' | 'blue' | 'green';
 
+type Track = 'economy' | 'military' | 'culture' | 'army' | 'tax';
+
+type CityEffectParams = {
+  track?: Track;
+  level?: number;
+  grantBonus?: boolean;
+  amount?: number;
+  drachmas?: number;
+  philosophy?: number;
+};
+
 export type CityEffect = {
   type: string; // e.g. 'track_upgrade', 'resource_bonus', 'special', 'todo'
-  params?: Record<string, any>;
+  params?: CityEffectParams;
   description: string;
 };
 

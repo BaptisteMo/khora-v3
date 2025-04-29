@@ -2,15 +2,30 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import type { Game } from '@/lib/supabase';
+
+// Define base types for resources
+type ResourceBase = {
+  id: string;
+  name: string;
+  description?: string;
+  effects?: Record<string, unknown>;
+};
+
+type ResourceRecord = ResourceBase & {
+  [key: string]: unknown;
+};
+
+type GameListItem = Pick<Game, 'id' | 'name'>;
 
 // This component allows testing the game resource tables we created in task 1.3
 export default function ResourceTablesTest() {
   const [selectedTable, setSelectedTable] = useState<string>('cities');
   const [selectedGame, setSelectedGame] = useState<string>('');
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<ResourceRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [games, setGames] = useState<any[]>([]);
+  const [games, setGames] = useState<GameListItem[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',

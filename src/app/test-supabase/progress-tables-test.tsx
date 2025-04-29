@@ -2,15 +2,31 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import type { Game } from '@/lib/supabase';
+
+// Define types for progress tables
+type Achievement = {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  points: number;
+  icon_name: string;
+  requirements: Record<string, unknown>;
+};
+
+type ProgressTableRecord = Achievement | { id: string; [key: string]: unknown };
+
+type GameListItem = Pick<Game, 'id' | 'name'>;
 
 // This component allows testing the game progress tables we created in task 1.4
 export default function ProgressTablesTest() {
   const [selectedTable, setSelectedTable] = useState<string>('achievements');
   const [selectedGame, setSelectedGame] = useState<string>('');
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<ProgressTableRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [games, setGames] = useState<any[]>([]);
+  const [games, setGames] = useState<GameListItem[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     description: '',

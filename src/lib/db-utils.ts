@@ -1,6 +1,15 @@
 import { supabase } from './supabase';
 import type { Game, GameParticipant, PlayerState, Profile } from './supabase';
 
+type GameProgressUpdate = {
+  current_phase: string;
+  current_round?: number;
+};
+
+type TrackUpdate = {
+  [key: `${string}_track_position`]: number;
+};
+
 /**
  * Profile-related utilities
  */
@@ -149,7 +158,7 @@ export const gameUtils = {
     phase: string, 
     round?: number
   ): Promise<boolean> {
-    const updates: any = { current_phase: phase };
+    const updates: GameProgressUpdate = { current_phase: phase };
     if (round !== undefined) {
       updates.current_round = round;
     }
@@ -311,9 +320,10 @@ export const playerStateUtils = {
     track: 'glory' | 'citizen' | 'tax' | 'culture' | 'military' | 'economy' | 'philosophy',
     position: number
   ): Promise<boolean> {
-    const trackField = `${track}_track_position`;
-    const updates: any = {};
-    updates[trackField] = position;
+    const trackField = `${track}_track_position` as const;
+    const updates: TrackUpdate = {
+      [trackField]: position
+    };
     
     const { error } = await supabase
       .from('player_state')

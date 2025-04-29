@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CITIES } from '@/data/cities';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -43,17 +43,6 @@ export default function SetupRoom({
   const allAssigned = Array.isArray(playerStates) && playerStates.every(ps => !!ps.city_id);
   const isHost = userId === hostId;
 
- // useEffect(() => {
-    // Call the presence API for each active participant
-   //@ const activeParticipants = participants.filter(p => p.is_active);
-   // activeParticipants.forEach(async (p) => {
-     // await fetch(`/api/games/${gameId}/setup-room/presence`, {
-     //   method: 'POST',
-     //   headers: { 'Content-Type': 'application/json' },
-     //   body: JSON.stringify({ userId: p.user_id }),
-     // });
-    //});
-  //}, [gameId, participants]);
 
   const handleAssignCities = async () => {
     setAssigning(true);

@@ -20,7 +20,7 @@ type EffectHandler = (player: PlayerState, effect: CityEffect) => void;
 const effectHandlers: Record<string, EffectHandler> = {
   track_upgrade: (player, effect) => {
     // Example: { track: 'economy', level: 2, grantBonus: true }
-    const { track, level, grantBonus } = effect.params || {};
+    const { track, level } = effect.params || {};
     if (!track || !level) return;
     if (!player.tracks) player.tracks = {};
     player.tracks[track] = (player.tracks[track] || 0) + level;

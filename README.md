@@ -156,7 +156,7 @@ To add more levels or change the cost/reward structure for any track:
   - `src/app/login/page.tsx` — Login form and logic
   - `src/app/signup/page.tsx` — Signup form and logic
   - `src/app/profile/page.tsx` — User profile display
-  - `src/app/profile/edit/page.tsx` — Profile editing UI
+- `src/app/profile/edit/page.tsx` — Profile editing UI
 - **Backend/Database:**
   - Supabase Auth (authentication)
   - `profiles` table (user info, stats, avatar)

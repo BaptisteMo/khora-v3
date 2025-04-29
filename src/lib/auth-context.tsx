@@ -7,6 +7,7 @@ import {
   useEffect,
   ReactNode,
   useMemo,
+  useCallback,
 } from 'react';
 import { Session, User, AuthChangeEvent } from '@supabase/supabase-js';
 
@@ -82,36 +83,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Fetch user profile from profiles table
-  const fetchUserProfile = async (userId: string) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-      if (error) throw error;
-      if (data) {
-        setProfile(data as Profile);
-      } else {
-        // Profile doesn't exist yet, create it with basic info
-        if (user) {
-          await createUserProfile(userId);
-        }
-      }
-    } catch (err: unknown) {
-      console.error('Error fetching user profile:', err);
-    }
-  };
-
-  useEffect(() => {
-    if (user && !profile) {
-      fetchUserProfile(user.id);
-    }
-  }, [user, profile]);
-
   // Create a new user profile
-  const createUserProfile = async (userId: string) => {
+  const createUserProfile = useCallback(async (userId: string) => {
     try {
       const newProfile = {
         id: userId,
@@ -135,7 +108,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err: unknown) {
       console.error('Error creating user profile:', err);
     }
-  };
+  }, [user]);
+
+  // Fetch user profile from profiles table
+  const fetchUserProfile = useCallback(async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      if (error) throw error;
+      if (data) {
+        setProfile(data as Profile);
+      } else {
+        // Profile doesn't exist yet, create it with basic info
+        if (user) {
+          await createUserProfile(userId);
+        }
+      }
+    } catch (err: unknown) {
+      console.error('Error fetching user profile:', err);
+    }
+  }, [user, createUserProfile]);
+
+  useEffect(() => {
+    if (user && !profile) {
+      fetchUserProfile(user.id);
+    }
+  }, [user, profile, fetchUserProfile]);
 
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);

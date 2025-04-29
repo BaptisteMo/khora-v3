@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { GameState, GamePhase } from '@/lib/game-state';
+import { GameState, GamePhase, GameStatus } from '@/lib/game-state';
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
   const { nextPhase } = await req.json();
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     updated_at: game.updated_at || new Date().toISOString(),
     is_public: typeof game.is_public === 'boolean' ? game.is_public : true,
     game_options: game.game_options || {},
-    status: game.status as any,
+    status: game.status as GameStatus,
   });
   const validation = gameState.validatePhaseTransition(nextPhase as GamePhase);
   if (!validation.valid) {

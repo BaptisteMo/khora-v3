@@ -10,7 +10,7 @@ export type Database = {
             id: string
             name: string
             points: number
-            requirements: Json
+            requirements: JSON
           }
           Insert: {
             category: string
@@ -20,7 +20,7 @@ export type Database = {
             id?: string
             name: string
             points?: number
-            requirements?: Json
+            requirements?: JSON
           }
           Update: {
             category?: string
@@ -30,7 +30,7 @@ export type Database = {
             id?: string
             name?: string
             points?: number
-            requirements?: Json
+            requirements?: JSON
           }
           Relationships: []
         }
@@ -87,7 +87,7 @@ export type Database = {
             city_id: string
             created_at: string
             development_type: string
-            effects: Json
+            effects: JSON
             id: string
             level: number
             updated_at: string
@@ -96,7 +96,7 @@ export type Database = {
             city_id: string
             created_at?: string
             development_type: string
-            effects?: Json
+            effects?: JSON
             id?: string
             level?: number
             updated_at?: string
@@ -105,7 +105,7 @@ export type Database = {
             city_id?: string
             created_at?: string
             development_type?: string
-            effects?: Json
+            effects?: JSON
             id?: string
             level?: number
             updated_at?: string
@@ -124,7 +124,7 @@ export type Database = {
           Row: {
             description: string
             difficulty: number
-            effects: Json
+            effects: JSON
             era: number
             id: string
             name: string
@@ -132,7 +132,7 @@ export type Database = {
           Insert: {
             description: string
             difficulty?: number
-            effects?: Json
+            effects?: JSON
             era: number
             id?: string
             name: string
@@ -140,7 +140,7 @@ export type Database = {
           Update: {
             description?: string
             difficulty?: number
-            effects?: Json
+            effects?: JSON
             era?: number
             id?: string
             name?: string
@@ -153,7 +153,7 @@ export type Database = {
             event_card_id: string
             game_id: string
             id: string
-            resolution_details: Json | null
+            resolution_details: JSON | null
             resolved: boolean
             round: number
           }
@@ -162,7 +162,7 @@ export type Database = {
             event_card_id: string
             game_id: string
             id?: string
-            resolution_details?: Json | null
+            resolution_details?: JSON | null
             resolved?: boolean
             round: number
           }
@@ -171,7 +171,7 @@ export type Database = {
             event_card_id?: string
             game_id?: string
             id?: string
-            resolution_details?: Json | null
+            resolution_details?: JSON | null
             resolved?: boolean
             round?: number
           }
@@ -242,7 +242,7 @@ export type Database = {
           Row: {
             created_at: string
             description: string
-            event_data: Json
+            event_data: JSON
             event_type: string
             game_id: string
             id: string
@@ -253,7 +253,7 @@ export type Database = {
           Insert: {
             created_at?: string
             description: string
-            event_data?: Json
+            event_data?: JSON
             event_type: string
             game_id: string
             id?: string
@@ -264,7 +264,7 @@ export type Database = {
           Update: {
             created_at?: string
             description?: string
-            event_data?: Json
+            event_data?: JSON
             event_type?: string
             game_id?: string
             id?: string
@@ -400,7 +400,7 @@ export type Database = {
             current_round: number
             description: string | null
             ended_at: string | null
-            game_options: Json
+            game_options: JSON
             id: string
             is_public: boolean
             join_code: string | null
@@ -420,7 +420,7 @@ export type Database = {
             current_round?: number
             description?: string | null
             ended_at?: string | null
-            game_options?: Json
+            game_options?: JSON
             id?: string
             is_public?: boolean
             join_code?: string | null
@@ -440,7 +440,7 @@ export type Database = {
             current_round?: number
             description?: string | null
             ended_at?: string | null
-            game_options?: Json
+            game_options?: JSON
             id?: string
             is_public?: boolean
             join_code?: string | null
@@ -620,7 +620,7 @@ export type Database = {
             game_id: string
             glory_track_position: number
             id: string
-            last_action: Json | null
+            last_action: JSON | null
             max_actions: number
             military_track_position: number
             participant_id: string
@@ -640,7 +640,7 @@ export type Database = {
             game_id: string
             glory_track_position?: number
             id?: string
-            last_action?: Json | null
+            last_action?: JSON | null
             max_actions?: number
             military_track_position?: number
             participant_id: string
@@ -660,7 +660,7 @@ export type Database = {
             game_id?: string
             glory_track_position?: number
             id?: string
-            last_action?: Json | null
+            last_action?: JSON | null
             max_actions?: number
             military_track_position?: number
             participant_id?: string
@@ -691,7 +691,7 @@ export type Database = {
             category: string
             cost: number
             description: string
-            effects: Json
+            effects: JSON
             id: string
             name: string
           }
@@ -699,7 +699,7 @@ export type Database = {
             category: string
             cost?: number
             description: string
-            effects?: Json
+            effects?: JSON
             id?: string
             name: string
           }
@@ -707,7 +707,7 @@ export type Database = {
             category?: string
             cost?: number
             description?: string
-            effects?: Json
+            effects?: JSON
             id?: string
             name?: string
           }

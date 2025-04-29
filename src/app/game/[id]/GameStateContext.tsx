@@ -70,7 +70,7 @@ export const GameProvider: React.FC<{ gameId: string; children: React.ReactNode 
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [playerStates, setPlayerStates] = useState<PlayerState[]>([]);
-  const [politicsCards, setPoliticsCards] = useState<PoliticsCard[]>([]);
+  const [politicsCards, /*setPoliticsCards*/] = useState<PoliticsCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
