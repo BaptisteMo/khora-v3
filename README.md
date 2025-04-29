@@ -50,6 +50,7 @@ Khora is a Next.js-based platform for multiplayer games. It provides:
 - Profile page with stats, avatar, and game history
 - Profile editing (username, avatar upload)
 - Protected routes for authenticated users
+- Ensured all updates are reflected in real time via Supabase subscriptions.
 
 ### Multiplayer Waiting Room & Lobby
 - **Join/Leave/Rejoin:**
@@ -77,6 +78,76 @@ Khora is a Next.js-based platform for multiplayer games. It provides:
   - When the game is paused, a banner is shown to all players until the host resumes the game.
 
 These features are available in the in-game UI after the game has started, providing robust session management and a smooth multiplayer experience.
+
+## Multiplayer Game State Management
+
+- Implemented a `GameProvider` React context (`src/app/game/[id]/GameStateContext.tsx`) to centralize all multiplayer game state and real-time updates.
+- The provider:
+  - Fetches and subscribes to game, participant, and player state changes using Supabase real-time channels.
+  - Exposes a single `useGame` hook for accessing:
+    - `gameState` (with phase/round helpers)
+    - `participants` (host, active, left info)
+    - `playerStates` (all per-player stats and tokens)
+    - `loading` and `error` states
+    - `refresh` and `updatePhase` methods
+  - Cleans up all subscriptions on unmount for reliability.
+- All types for participants, player states, and context values are strictly defined for type safety.
+- This enables a robust, real-time multiplayer experience and makes it easy to build new game features on top of a single, reliable state source.
+
+## Game Rounds & Phase Management
+
+The game is structured into multiple **rounds**, each consisting of a fixed sequence of **phases**:
+- `Setup`, `Event Announcement`, `Tax`, `Dice`, `Action`, `Progress`, `Event Resolution`, `Achievement Tracking`
+- The current round and phase are tracked in the database (`games` table: `current_round`, `total_round`, `current_phase`).
+
+### Advancing Phases & Rounds
+- The host can advance the phase using in-game controls.
+- When the last phase (`Achievement Tracking`) is completed, the round increments (unless at the final round).
+- The backend enforces valid transitions and prevents advancing past the final round.
+
+### Idempotency
+- Key actions (tax phase, dice phase, event resolution) can only be performed once per round, enforced by the backend.
+
+## GameProvider & Real-Time Round Sync
+
+- The [`GameProvider`](src/app/game/[id]/GameStateContext.tsx) React context is the **central hub for all game state**, including round and phase management.
+- It:
+  - Fetches the latest game state (including `current_round` and `current_phase`) from the backend.
+  - Subscribes to real-time updates for the game, participants, and player states using Supabase channels.
+  - Exposes the current round, total rounds, and phase to all components via the `useGame()` hook.
+  - Provides an `updatePhase` method to trigger phase changes (and round increments, if appropriate).
+- The UI always reflects the latest round/phase, and all round-based actions (like dice rolls or tax collection) are automatically locked to once per round.
+
+### How to Use in Development
+
+- To access the current round or phase in any React component, use:
+  ```typescript
+  const { gameState } = useGame();
+  const round = gameState?.round;
+  const phase = gameState?.phase;
+  ```
+- To advance the phase (host only):
+  ```typescript
+  const { updatePhase } = useGame();
+  await updatePhase(nextPhase);
+  ```
+
+## Backend Enforcement
+
+- The backend API routes for dice phase, tax phase, and event resolution all check the current round and ensure each action is only performed once per round.
+- The round and phase logic is centralized in [`src/lib/game-state.ts`](src/lib/game-state.ts) and [`src/lib/db-utils.ts`](src/lib/db-utils.ts).
+
+## Summary Table: Round & Phase Management
+
+| File/Module                                      | Purpose in Round Management                                                                 |
+|--------------------------------------------------|---------------------------------------------------------------------------------------------|
+| `game-state.ts`                                  | Core round/phase logic, round increment, validation                                         |
+| `game-init.ts`                                   | Sets up initial round values for new games                                                  |
+| `db-utils.ts`                                    | Updates round/phase in the database                                                         |
+| `dice-phase/route.ts`, `tax-phase/route.ts`      | Enforces one action per round, updates round markers                                        |
+| `event-resolution/route.ts`                      | Applies event for the current round                                                         |
+| `GameStateContext.tsx` (GameProvider)            | Provides real-time round/phase info to the frontend                                         |
+| `database.types.ts`                              | Type definitions for round fields                                                           |
 
 ---
 
@@ -294,3 +365,32 @@ To add more levels or change the cost/reward structure for any track:
 ## Conclusion
 
 Khora is a powerful platform for multiplayer games, offering robust authentication, user profile management, and a real-time multiplayer experience. It's designed to be scalable and easy to use, making it a great choice for both developers and players.
+
+## Task 8: Type Safety and Linting Improvements
+
+### Enhanced Type Safety
+- Replaced all instances of `any` type with proper TypeScript types across the codebase
+- Added specific types for:
+  - Resource records and game list items in test components
+  - City effect parameters and track updates in game logic
+  - Game progress updates in database utilities
+  - Auth context dependencies with proper memoization
+
+### Key Changes
+- Created `ResourceBase` and `ResourceRecord` types for resource-related components
+- Defined `GameProgressUpdate` and `TrackUpdate` types for game state management
+- Improved React hooks dependency arrays with proper TypeScript types
+- Added proper type definitions for database utility functions
+
+### Files Updated
+- `src/app/test-supabase/progress-tables-test.tsx`
+- `src/app/test-supabase/resource-tables-test.tsx`
+- `src/data/cities.ts`
+- `src/lib/db-utils.ts`
+- `src/lib/auth-context.tsx`
+
+### Benefits
+- Better IDE support with accurate type hints
+- Catch potential type-related bugs at compile time
+- More maintainable and self-documenting code
+- Improved development experience with proper TypeScript integration
